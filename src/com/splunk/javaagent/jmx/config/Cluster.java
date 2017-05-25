@@ -10,14 +10,14 @@ import java.util.List;
  */
 public class Cluster {
 
-	public String name;
-	public String description;
+	private String name;
+	private String description;
 
 	// the cluster MBeans to Query
-	public List<MBean> mbeans;
+	private List<MBean> mbeans;
 
 	// the cluster members
-	public List<JMXServer> servers;
+	private List<JMXServer> servers;
 
 	public Cluster() {
 	}

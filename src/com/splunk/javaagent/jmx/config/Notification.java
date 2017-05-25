@@ -1,5 +1,7 @@
 package com.splunk.javaagent.jmx.config;
 
+import javax.xml.bind.annotation.XmlAttribute;
+
 /**
  * POJO for an MBean notification
  * 
@@ -8,11 +10,12 @@ package com.splunk.javaagent.jmx.config;
  */
 public class Notification {
 
-	public String filterImplementationClass;
+	private String filterImplementationClass;
 
 	public Notification() {
 	}
 
+	@XmlAttribute(name="filterImplementationClass")
 	public String getFilterImplementationClass() {
 		return filterImplementationClass;
 	}

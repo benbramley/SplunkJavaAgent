@@ -7,60 +7,62 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
 /**
  * POJO for a JMX Server
  * 
  * @author Damien Dallimore damien@dtdsoftware.com
  * 
  */
+
 public class JMXServer {
 
 	// private static Logger logger = LoggerFactory.getLogger(JMXServer.class);
 
 	// PID of locally running JVM
-	public int processID;
+	private int processID;
 
 	// PID File of locally running JVM
-	public String pidFile;
+	private String pidFile;
 
 	// PID Command to obtain PID of locally running JVM
-	public String pidCommand;
+	private String pidCommand;
 
 	// Where a command returns multiple PIDs,store the additional PIDs in a List
-	public List<Integer> additionalPIDsFromCommand;
+	private List<Integer> additionalPIDsFromCommand;
 
 	// JMX hostname, dns alias, ip address
-	public String host = "";
+	private String host = "";
 
 	// meta data description of the JVM being connected to
-	public String jvmDescription;
+	private String jvmDescription;
 
 	// remote JMX port
-	public int jmxport;
+	private int jmxport;
 
 	// JMX username
-	public String jmxuser = "";
+	private String jmxuser = "";
 
 	// JMX password
-	public String jmxpass = "";
+	private String jmxpass = "";
 
 	// JMX connector protocol
-	public String protocol = "rmi"; // default
+	private String protocol = "rmi"; // default
 
 	// Remote stub lookup path
-	public String lookupPath = "";
+	private String lookupPath = "";
 
 	// Remote stub source
-	public String stubSource = "jndi"; // default
+	private String stubSource = "jndi"; // default
 
 	// Encoded stub
-	public String encodedStub = ""; // for "stub" and "ior" stub sources
+	private String encodedStub = ""; // for "stub" and "ior" stub sources
 
 	// Raw URL input, optional if the pre set fields dont suffice
-	public String jmxServiceURL = "";
+	private String jmxServiceURL = "";
 
 	// list of MBeans/MBeans Patterns to Query
-	public List<MBean> mbeans;
+	private List<MBean> mbeans;
 
 	public JMXServer() {
 	}
@@ -146,6 +148,7 @@ public class JMXServer {
 		this.jmxServiceURL = jmxServiceURL;
 	}
 
+	@XmlElement(name="mbean")
 	public List<MBean> getMbeans() {
 		return mbeans;
 	}

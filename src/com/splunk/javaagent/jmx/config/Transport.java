@@ -15,7 +15,7 @@ public class Transport extends ParameterizedConfig {
 	public final static String DEFAULT = "com.splunk.javaagent.jmx.transport.SplunkJavaAgentTransport";
 
 	// class name of the transport implementation
-	public String className = DEFAULT;
+	private String className = DEFAULT;
 
 	public Transport() {
 	}

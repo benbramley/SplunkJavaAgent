@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAttribute;
+
 /**
  * POJO for an MBean attribute
  * 
@@ -14,10 +17,10 @@ public class Attribute {
 
 	// Attribute name. Deep attributes can be delimited with a ":"
 	// Example , A:B:C
-	public String name;
+	private String name;
 
 	// name that should be written out to SPLUNK
-	public String outputname;
+	private String outputname;
 
 	private List<String> tokens;
 
@@ -26,6 +29,7 @@ public class Attribute {
 	public Attribute() {
 	}
 
+	@XmlAttribute(name="name")
 	public String getName() {
 		return name;
 	}
@@ -45,6 +49,7 @@ public class Attribute {
 
 	}
 
+	@XmlAttribute(name="outputname")
 	public String getOutputname() {
 		return outputname;
 	}

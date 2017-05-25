@@ -2,6 +2,9 @@ package com.splunk.javaagent.jmx.config;
 
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlAttribute;
+
 /**
  * POJO for an MBean
  * 
@@ -14,27 +17,29 @@ import java.util.List;
  * @author Damien Dallimore damien@dtdsoftware.com
  * 
  */
+
 public class MBean {
 
 	// MBean domain literal string or pattern
-	public String domain = "";
+	private String domain = "";
 
 	// MBean properties list string or pattern in "key=value, key2=value2"
 	// format
-	public String propertiesList = "";
+	private String propertiesList = "";
 
 	// if true, will dump all of the attributes for the MBean
-	public boolean dumpAllAttributes;
+	private boolean dumpAllAttributes;
 
-	public List<Attribute> attributes;
+	private List<Attribute> attributes;
 
-	public Notification notification;
+	private Notification notification;
 
-	public List<Operation> operations;
+	private List<Operation> operations;
 
 	public MBean() {
 	}
 
+	@XmlAttribute(name="domain")
 	public String getDomain() {
 		return domain;
 	}
@@ -43,6 +48,7 @@ public class MBean {
 		this.domain = domain;
 	}
 
+	@XmlAttribute(name="properties")
 	public String getPropertiesList() {
 		return propertiesList;
 	}
@@ -51,6 +57,7 @@ public class MBean {
 		this.propertiesList = propertiesList;
 	}
 
+	@XmlElement(name="attribute")
 	public List<Attribute> getAttributes() {
 		return attributes;
 	}
@@ -59,6 +66,7 @@ public class MBean {
 		this.attributes = attributes;
 	}
 
+	@XmlElement(name="notificationListener")
 	public Notification getNotification() {
 		return notification;
 	}
@@ -67,6 +75,7 @@ public class MBean {
 		this.notification = notification;
 	}
 
+	@XmlElement(name="operation")
 	public List<Operation> getOperations() {
 		return operations;
 	}
@@ -75,6 +84,7 @@ public class MBean {
 		this.operations = operations;
 	}
 
+	@XmlAttribute(name="dumpAllAttributes")
 	public boolean isDumpAllAttributes() {
 		return dumpAllAttributes;
 	}

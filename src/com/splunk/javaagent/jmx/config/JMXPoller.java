@@ -3,29 +3,35 @@ package com.splunk.javaagent.jmx.config;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Root config POJO
  * 
  * @author Damien Dallimore damien@dtdsoftware.com
  * 
  */
+@XmlRootElement(name="jmxpoller")
 public class JMXPoller {
 
 	// the list of JMX Servers to connect to
-	public List<JMXServer> servers;
+	private List<JMXServer> servers;
 
 	// a list of JMX Server Clusters
-	public List<Cluster> clusters;
+	private List<Cluster> clusters;
 
 	// a custom formatter
-	public Formatter formatter;
+	private Formatter formatter;
 
 	// a custom transport
-	public Transport transport;
+	private Transport transport;
 
 	public JMXPoller() {
 	}
 
+	@XmlElement(type=JMXServer.class, name="jmxserver")
 	public List<JMXServer> getServers() {
 		return servers;
 	}
@@ -60,6 +66,7 @@ public class JMXPoller {
 
 	}
 
+	@XmlElement(type=Formatter.class, name="formatter")
 	public Formatter getFormatter() {
 		return formatter;
 	}
@@ -68,6 +75,7 @@ public class JMXPoller {
 		this.formatter = formatter;
 	}
 
+	@XmlElement(type=Transport.class, name="transport")
 	public Transport getTransport() {
 		return transport;
 	}
@@ -76,6 +84,7 @@ public class JMXPoller {
 		this.transport = transport;
 	}
 
+	@XmlElement(type=Cluster.class, name="cluster")
 	public List<Cluster> getClusters() {
 		return clusters;
 	}

@@ -9,9 +9,11 @@ import java.util.List;
 import javax.management.MBeanServerConnection;
 
 import org.apache.log4j.Logger;
-import org.exolab.castor.mapping.Mapping;
-import org.exolab.castor.xml.Unmarshaller;
+
 import org.xml.sax.InputSource;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 import com.splunk.javaagent.jmx.config.Formatter;
 import com.splunk.javaagent.jmx.config.JMXPoller;
@@ -131,17 +133,11 @@ public class JMXMBeanPoller {
 		SchemaValidator validator = new SchemaValidator();
 		validator.validateSchema(inputSource);
 
-		// use CASTOR to parse XML into Java POJOs
-		Mapping mapping = new Mapping();
+		// BB: use JAXB to parse XML into Java POJOs instead of Castor
 
-		URL mappingURL = JMXMBeanPoller.class
-				.getResource("/com/splunk/javaagent/jmx/mapping.xml");
-		mapping.loadMapping(mappingURL);
-		Unmarshaller unmar = new Unmarshaller(mapping);
-
-		// for some reason the xsd validator closes the file stream, so re-open
-		inputSource = new InputSource(file.openStream());
-		JMXPoller poller = (JMXPoller) unmar.unmarshal(inputSource);
+		JAXBContext jaxbContext = JAXBContext.newInstance(JMXPoller.class);
+		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+		JMXPoller poller = (JMXPoller) jaxbUnmarshaller.unmarshal(file);
 
 		return poller;
 

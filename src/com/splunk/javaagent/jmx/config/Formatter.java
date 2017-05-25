@@ -3,6 +3,8 @@ package com.splunk.javaagent.jmx.config;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.bind.annotation.XmlAttribute;
+
 /**
  * POJO for Formatter config
  * 
@@ -15,11 +17,12 @@ public class Formatter extends ParameterizedConfig {
 	public final static String DEFAULT = "com.splunk.javaagent.jmx.formatter.TokenizedMBeanNameQuotesStrippedFormatter";
 
 	// class name of the Formatter implementation
-	public String className = DEFAULT;
+	private String className = DEFAULT;
 
 	public Formatter() {
 	}
 
+	@XmlAttribute(name="className")
 	public String getClassName() {
 		return className;
 	}

@@ -2,6 +2,8 @@ package com.splunk.javaagent.jmx.config;
 
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAttribute;
+
 /**
  * POJO for an MBean operation
  * 
@@ -11,19 +13,20 @@ import java.util.List;
 public class Operation {
 
 	// operation name
-	public String name;
+	private String name;
 
 	// name for the result that should be written out to SPLUNK
-	public String outputname = "";
+	private String outputname = "";
 
 	// operations parameters
-	public List<Parameter> parameters;
+	private List<Parameter> parameters;
 
 	// private static Logger logger = LoggerFactory.getLogger(Operation.class);
 
 	public Operation() {
 	}
 
+	@XmlAttribute(name="name")
 	public String getName() {
 		return name;
 	}
@@ -32,6 +35,7 @@ public class Operation {
 		this.name = name;
 	}
 
+	@XmlAttribute(name="outputname")
 	public String getOutputname() {
 		return outputname;
 	}
