@@ -2,6 +2,7 @@ package com.splunk.javaagent.jmx;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.net.URL;
 import java.util.List;
@@ -105,6 +106,7 @@ public class JMXMBeanPoller {
 
 		InputStream in = null;
 		boolean foundFile = false;
+		boolean onFS = false;
 
 		// look inside the jar first
 		URL file = JMXMBeanPoller.class.getResource("/" + configFileName);
@@ -112,11 +114,13 @@ public class JMXMBeanPoller {
 		if (file != null) {
 			in = file.openStream();
 			foundFile = true;
+			onFS = false;
 		} else {
 			try {
 				// look on the filesystem
 				in = new FileInputStream(configFileName);
 				foundFile = true;
+				onFS = true;
 			} catch (Exception e) {
 				foundFile = false;
 			}
@@ -127,17 +131,34 @@ public class JMXMBeanPoller {
 			throw new Exception("The config file " + configFileName
 					+ " does not exist");
 		}
+		else
+			logger.info("JMX config file loaded: " + configFileName + ". On filesystem: " + onFS);
 
-		// xsd validation
-		InputSource inputSource = new InputSource(file.openStream());
-		SchemaValidator validator = new SchemaValidator();
-		validator.validateSchema(inputSource);
+		JMXPoller poller = null;
 
-		// BB: use JAXB to parse XML into Java POJOs instead of Castor
+		try {
+			// xsd validation
+			InputSource inputSource = new InputSource(in);
+			SchemaValidator validator = new SchemaValidator();
+			validator.validateSchema(inputSource);
 
-		JAXBContext jaxbContext = JAXBContext.newInstance(JMXPoller.class);
-		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		JMXPoller poller = (JMXPoller) jaxbUnmarshaller.unmarshal(file);
+			// BB: use JAXB to parse XML into Java POJOs instead of Castor
+
+			JAXBContext jaxbContext = JAXBContext.newInstance(JMXPoller.class);
+			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+
+			if (onFS)
+				poller = (JMXPoller) jaxbUnmarshaller.unmarshal(new File(configFileName));
+			else
+			{
+				inputSource = new InputSource(file.openStream());
+				poller = (JMXPoller) jaxbUnmarshaller.unmarshal(inputSource);
+			}
+
+		}
+		catch (Exception e) {
+			logger.error("JMX Error: ", e);
+		}
 
 		return poller;
 
