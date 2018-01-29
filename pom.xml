@@ -129,10 +129,9 @@
                 <relocation>
                   <pattern>org.apache</pattern>
                   <shadedPattern>com.splunk.apache</shadedPattern>
-                </relocation>
-                <relocation>
-                  <pattern>org.xml</pattern>
-                  <shadedPattern>com.splunk.xml</shadedPattern>
+                  <excludes>
+                    <exclude>org.apache.xerces.**</exclude>
+                  </excludes>
                 </relocation>
               </relocations>
               <transformers>
