@@ -116,17 +116,17 @@ public class SplunkJavaAgent implements JavaAgentMXBean {
 
 	}
 
-	private boolean initTracing() {
+	public boolean initTracing() {
 
 		logger.info("Initialising tracing");
 
-		this.traceClassLoaded = Boolean.parseBoolean(agent.props.getProperty(
+		this.traceClassLoaded = Boolean.parseBoolean(props.getProperty(
 				"trace.classLoaded", "true"));
-		this.traceMethodEntered = Boolean.parseBoolean(agent.props.getProperty(
+		this.traceMethodEntered = Boolean.parseBoolean(props.getProperty(
 				"trace.methodEntered", "true"));
-		this.traceMethodExited = Boolean.parseBoolean(agent.props.getProperty(
+		this.traceMethodExited = Boolean.parseBoolean(props.getProperty(
 				"trace.methodExited", "true"));
-		this.traceErrors = Boolean.parseBoolean(agent.props.getProperty(
+		this.traceErrors = Boolean.parseBoolean(props.getProperty(
 				"trace.errors", "true"));
 
 		return true;
@@ -147,11 +147,11 @@ public class SplunkJavaAgent implements JavaAgentMXBean {
 		}
 	}
 
-	private boolean initHprof() {
+	public boolean initHprof() {
 
 		logger.info("Initialising HPROF");
 
-		this.traceHprof = Boolean.parseBoolean(agent.props.getProperty(
+		this.traceHprof = Boolean.parseBoolean(props.getProperty(
 				"trace.hprof", "false"));
 		if (this.traceHprof) {
 			this.hprofFile = props.getProperty("trace.hprof.tempfile", "");
@@ -215,11 +215,11 @@ public class SplunkJavaAgent implements JavaAgentMXBean {
 		}
 	}
 
-	private boolean initJMX() {
+	public boolean initJMX() {
 
 		logger.info("Initialising JMX");
 
-		this.traceJMX = Boolean.parseBoolean(agent.props.getProperty(
+		this.traceJMX = Boolean.parseBoolean(props.getProperty(
 				"trace.jmx", "false"));
 		if (this.traceJMX) {
 
@@ -250,7 +250,7 @@ public class SplunkJavaAgent implements JavaAgentMXBean {
 		return true;
 	}
 
-	private boolean initCommonProperties() {
+	public boolean initCommonProperties() {
 
 		logger.info("Initialising common properties");
 
@@ -505,7 +505,7 @@ public class SplunkJavaAgent implements JavaAgentMXBean {
 
 	}
 
-	private boolean initFilters() {
+	public boolean initFilters() {
 
 		try {
 			logger.info("Initialising filters");
@@ -601,7 +601,7 @@ public class SplunkJavaAgent implements JavaAgentMXBean {
 
 	}
 
-	private boolean initTransport() {
+	public boolean initTransport() {
 
 		logger.info("Initialising transport");
 
@@ -629,7 +629,7 @@ public class SplunkJavaAgent implements JavaAgentMXBean {
 			this.queueSize = Integer.parseInt(props.getProperty(
 					"splunk.transport.internalQueueSize", "100000"));
 		} catch (NumberFormatException e) {
-
+			
 		}
 
 		try {
@@ -659,7 +659,7 @@ public class SplunkJavaAgent implements JavaAgentMXBean {
 
 	}
 
-	private boolean loadProperties(String propsFile) {
+	public boolean loadProperties(String propsFile) {
 
 		logger.info("Loading properties file");
 
