@@ -71,49 +71,16 @@ public class SplunkJavaAgent implements JavaAgentMXBean {
 
 	public static void premain(String agentArgument,
 			Instrumentation instrumentation) {
+		
+		agent = new SplunkJavaAgent();
+		agent.initAgent(agentArgument, instrumentation);
 
-		try {
+	}
 
-			logger.info("Starting Splunk Java Agent");
-
-			agent = new SplunkJavaAgent();
-
-			if (!agent.loadProperties(agentArgument))
-				return;
-			if (!agent.initCommonProperties())
-				return;
-			if (!agent.initTransport())
-				return;
-			if (!agent.initTracing())
-				return;
-			if (!agent.initFilters())
-				return;
-			if (!agent.initJMX())
-				return;
-			if (!agent.initHprof())
-				return;
-
-			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-			ObjectName objName = new ObjectName("splunkjavaagent:type=agent");
-			mbs.registerMBean(agent, objName);
-
-			Runtime.getRuntime().addShutdownHook(new Thread() {
-				public void run() {
-					try {
-						if (agent.transport != null)
-							agent.transport.stop();
-					} catch (Exception e) {
-						logger.error("Error running Splunk Java Agent shutdown hook : "
-								+ e.getMessage());
-					}
-				}
-			});
-
-			instrumentation.addTransformer(new SplunkClassFileTransformer());
-		} catch (Throwable t) {
-			logger.error("Error starting Splunk Java Agent : " + t.getMessage());
-		}
-
+	public void initAgent(String agentArgument, Instrumentation instrumentation)
+	{
+		ControlThread ct = new ControlThread(agentArgument, instrumentation);
+		ct.start();
 	}
 
 	public boolean initTracing() {
@@ -268,6 +235,67 @@ public class SplunkJavaAgent implements JavaAgentMXBean {
 		setUserEventTags(tags);
 
 		return true;
+	}
+
+	class ControlThread extends Thread {
+
+		boolean stopped = false;
+		String agentArgument;
+		Instrumentation inst;
+
+		public ControlThread (String args, Instrumentation inst) {
+			this.agentArgument = args;
+			this.inst = inst;
+		}
+
+		public void stopThread() {
+			this.stopped = true;
+		}
+
+		public void run() {
+
+			try {
+
+				logger.info("Starting Splunk Java Agent");
+
+				if (!agent.loadProperties(agentArgument))
+					return;
+				if (!agent.initCommonProperties())
+					return;
+				if (!agent.initTransport())
+					return;
+				if (!agent.initTracing())
+					return;
+				if (!agent.initFilters())
+					return;
+				if (!agent.initJMX())
+					return;
+				if (!agent.initHprof())
+					return;
+
+				MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+				ObjectName objName = new ObjectName("splunkjavaagent:type=agent");
+				mbs.registerMBean(agent, objName);
+
+				Runtime.getRuntime().addShutdownHook(new Thread() {
+					public void run() {
+						try {
+							if (agent.transport != null)
+								agent.transport.stop();
+						} catch (Exception e) {
+							logger.error("Error running Splunk Java Agent shutdown hook : "
+									+ e.getMessage());
+						}
+					}
+				});
+
+				inst.addTransformer(new SplunkClassFileTransformer());
+			} catch (Throwable t) {
+				logger.error("Error starting Splunk Java Agent : " + t.getMessage());
+			}
+			
+		}
+
 	}
 
 	class TransporterThread extends Thread {
