@@ -290,6 +290,12 @@ public class SplunkJavaAgent implements JavaAgentMXBean {
 				});
 
 				inst.addTransformer(new SplunkClassFileTransformer());
+
+				while (!stopped)
+				{
+					Thread.sleep(60000);
+				}
+
 			} catch (Throwable t) {
 				logger.error("Error starting Splunk Java Agent : " + t.getMessage());
 			}
