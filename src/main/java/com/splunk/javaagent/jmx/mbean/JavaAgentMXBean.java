@@ -13,6 +13,8 @@ public interface JavaAgentMXBean {
 
 	public boolean getStartPaused();
 
+	public int getDelayStartup();
+
 	public String getLoggingLevel();
 
 	public String getTracingBlacklist();

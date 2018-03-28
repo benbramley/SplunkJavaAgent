@@ -60,6 +60,8 @@ public class SplunkJavaAgent implements JavaAgentMXBean {
 	private static Logger logger = Logger.getLogger(SplunkJavaAgent.class);
 
 	private boolean paused = false;
+	private int delayStartup = -1;
+
 	private JMXThread jmxThread;
 	private HprofThread hprofThread;
 
@@ -226,6 +228,10 @@ public class SplunkJavaAgent implements JavaAgentMXBean {
 
 		this.paused = Boolean.parseBoolean(props.getProperty(
 				"agent.startPaused", "false"));
+
+		this.delayStartup = Integer.parseInt(props.getProperty(
+				"agent.delayStartup", "-1"));
+
 		String tags = (String) props.getProperty("agent.userEventTags", "");
 		this.userTags = new HashMap<String, String>();
 
@@ -262,6 +268,10 @@ public class SplunkJavaAgent implements JavaAgentMXBean {
 					return;
 				if (!agent.initCommonProperties())
 					return;
+
+				if (agent.getDelayStartup() > 0)
+					wait ( agent.getDelayStartup() );
+
 				if (!agent.initTransport())
 					return;
 				if (!agent.initTracing())
@@ -293,13 +303,18 @@ public class SplunkJavaAgent implements JavaAgentMXBean {
 
 				while (!stopped)
 				{
-					Thread.sleep(60000);
+					wait( 60 );
 				}
 
 			} catch (Throwable t) {
 				logger.error("Error starting Splunk Java Agent : " + t.getMessage());
 			}
 			
+		}
+
+		private void wait(int seconds) throws InterruptedException
+		{
+			Thread.sleep (seconds * 1000);
 		}
 
 	}
@@ -918,6 +933,13 @@ public class SplunkJavaAgent implements JavaAgentMXBean {
 	public boolean getStartPaused() {
 
 		return this.paused;
+
+	}
+
+	@Override
+	public int getDelayStartup() {
+
+		return this.delayStartup;
 
 	}
 
